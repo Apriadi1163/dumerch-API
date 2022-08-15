@@ -1,7 +1,15 @@
 const { product, user, category, productcategory } = require("../../models")
 
+const cloudinary = require('../utils/cloudinary');
+
 exports.addProduct = async (req, res) => {
     try {
+      const result = await cloudinary.uploader.upload(req.file.path, {
+        folder: 'Upload',
+        use_filename: true,
+        unique_filename: false,
+      });
+
       let { categoryId } = req.body;
       if (categoryId) {
         categoryId = categoryId.split(",");
@@ -10,18 +18,14 @@ exports.addProduct = async (req, res) => {
         name: req.body.name,
         desc: req.body.desc,
         price: req.body.price,
-        image: req.file.filename,
+        image: result.public_id,
         qty: req.body.qty,
         idUser: req.user.id,
       };
   
       let newProduct = await product.create(data);
 
-      // const productCategoryData = categoryId.map((item) => {
-      //   return { idProduct: newProduct.id, idCategory: parseInt(item) };
-      // });
-  
-      // await categoryProduct.bulkCreate(productCategoryData);
+      
       if (categoryId) {
         const productCategoryData = categoryId.map((item) => {
           return { idProduct: newProduct.id, idCategory: parseInt(item) };
