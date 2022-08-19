@@ -207,7 +207,10 @@ exports.updateProduct = async (req, res) => {
     res.status(200).send({
       status: "Success",
       message: `Update product at id: ${id} success`,
-      updateProduct,
+      // updateProduct,
+      data: {
+        products: updateProduct,
+      },
     });
   } catch (error) {
     console.log(error);
