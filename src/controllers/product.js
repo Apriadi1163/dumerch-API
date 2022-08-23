@@ -184,14 +184,14 @@ exports.updateProduct = async (req, res) => {
     });
 
     const data = req.body;
-    // if (req.file) {
-    //   data.image = req.file.filename;
-    // }
+    if (req.file) {
+      data.image = result.public_id;
+    }
     console.log(data);
     let updateProduct = await product.update(
       {
         ...data,
-        image: result.public_id,
+        // image: result.public_id,
         idUser: req.user.id,
       },
       { where: { id } }
@@ -207,10 +207,8 @@ exports.updateProduct = async (req, res) => {
     res.status(200).send({
       status: "Success",
       message: `Update product at id: ${id} success`,
-      // updateProduct,
-      data: {
-        products: updateProduct,
-      },
+      updateProduct,
+      
     });
   } catch (error) {
     console.log(error);
